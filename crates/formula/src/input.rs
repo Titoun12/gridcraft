@@ -51,12 +51,15 @@ const FRENCH_ERRORS: &[(CellError, &str)] = &[
 ];
 
 impl FormulaLocale {
+    /// The argument and union separator: `;` where the decimal mark is a comma.
     pub fn list_separator(self) -> char {
         if self != Self::En { ';' } else { ',' }
     }
+    /// The decimal mark of numbers typed in formulas (`1,5` in French and Spanish).
     pub fn decimal_separator(self) -> char {
         if self != Self::En { ',' } else { '.' }
     }
+    /// The separator between the columns of an array constant (`{1\2;3\4}` with a comma decimal mark).
     pub fn array_column_separator(self) -> char {
         if self != Self::En { '\\' } else { ',' }
     }
@@ -68,9 +71,13 @@ impl FormulaLocale {
             Self::Fr => french::FRENCH,
         }
     }
+    /// The name this language gives the canonical (English) function `canonical`, or `canonical`
+    /// itself when the language has no other.
     pub fn function_name(self, canonical: &str) -> &str {
         self.aliases().iter().find(|(en, _)| en.eq_ignore_ascii_case(canonical)).map(|(_, local)| *local).unwrap_or(canonical)
     }
+    /// The canonical (English) function a localized name stands for, or `localized` itself when
+    /// the language has no such name (English names keep working).
     pub fn canonical_name(self, localized: &str) -> &str {
         self.aliases().iter().find(|(_, local)| local.eq_ignore_ascii_case(localized)).map(|(en, _)| *en).unwrap_or(localized)
     }
@@ -157,6 +164,7 @@ pub fn print_input(expr: &Expr, locale: FormulaLocale, known_name: impl Fn(&str)
     Ok(out)
 }
 
+/// `TRUE` or `FALSE` written in `locale` (`VRAI`, `FAUX`).
 pub(crate) fn boolean_alias(name: &str, locale: FormulaLocale) -> Option<bool> {
     let canonical = locale.canonical_name(name);
     if canonical.eq_ignore_ascii_case("TRUE") {
@@ -168,6 +176,9 @@ pub(crate) fn boolean_alias(name: &str, locale: FormulaLocale) -> Option<bool> {
     }
 }
 
+/// Rewrites function names, booleans and function-valued names between the canonical spelling
+/// and `locale`: to `locale` when `display`, to canonical otherwise. Names bound by LET, LAMBDA
+/// or `known_name` keep their spelling.
 fn normalize(
     expr: &mut Expr,
     known_name: &impl Fn(&str) -> bool,

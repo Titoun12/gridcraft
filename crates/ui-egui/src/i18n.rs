@@ -185,6 +185,8 @@ impl Language {
         }
     }
 
+    /// The formula syntax this interface language enters and shows (names, separators); English
+    /// for languages without a formula table.
     pub fn formula_locale(self) -> gridcraft_engine::formula::FormulaLocale {
         match self {
             Self::Es => gridcraft_engine::formula::FormulaLocale::Es,

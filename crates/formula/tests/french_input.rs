@@ -1,6 +1,7 @@
 use gridcraft_formula::{FormulaLocale, parse, parse_input, print, print_input};
 
 #[test]
+/// French names, `;`, decimal commas and VRAI/FAUX read and print back as canonical English.
 fn french_names_separators_booleans_and_arrays() {
     for (canonical, french) in [
         ("IF(TRUE,SUM(1.5,2.25),FALSE)", "SI(VRAI;SOMME(1,5;2,25);FAUX)"),
@@ -27,6 +28,7 @@ fn french_names_separators_booleans_and_arrays() {
 }
 
 #[test]
+/// Text, sheet and table names, and LET/LAMBDA bindings are never translated.
 fn french_translation_preserves_user_text_names_and_scopes() {
     for canonical in [
         "LET(SOMME,LAMBDA(x,x+1),SUM(SOMME(2),FALSE))",
@@ -49,6 +51,7 @@ fn french_translation_preserves_user_text_names_and_scopes() {
 }
 
 #[test]
+/// Error values are written the French way and still read in English.
 fn french_error_values_in_formulas() {
     for (french, canonical) in [
         ("SI(ESTERREUR(A1);#VALEUR!;A1)", "IF(ISERROR(A1),#VALUE!,A1)"),

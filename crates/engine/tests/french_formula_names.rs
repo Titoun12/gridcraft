@@ -4,6 +4,7 @@
 use gridcraft_engine::{calc::SPECIAL_FUNCTIONS, formula::FormulaLocale};
 
 #[test]
+/// Every registered function and special form has a French row.
 fn every_known_function_has_a_french_name() {
     let table = FormulaLocale::Fr.aliases();
     let has = |name: &str| table.iter().any(|(en, _)| en.eq_ignore_ascii_case(name));
@@ -19,6 +20,7 @@ fn every_known_function_has_a_french_name() {
 }
 
 #[test]
+/// No function has two French names, and no French name stands for two functions.
 fn french_names_are_unique_both_ways() {
     let table = FormulaLocale::Fr.aliases();
     for (i, (en, fr)) in table.iter().enumerate() {

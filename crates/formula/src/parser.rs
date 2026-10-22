@@ -59,6 +59,8 @@ pub(crate) fn parse_syntax(src: &str, locale: crate::FormulaLocale) -> Result<Ex
     parse_top(src, locale, false)
 }
 
+/// Parses a formula (with or without its `=`) in `locale` syntax; `allow_union` lets a top-level
+/// `,` mean the union operator.
 fn parse_top(src: &str, locale: crate::FormulaLocale, allow_union: bool) -> Result<Expr, ParseError> {
     let body = src.strip_prefix('=').unwrap_or(src);
     if body.len() > MAX_FORMULA_LEN && body.chars().count() > MAX_FORMULA_LEN {
@@ -419,6 +421,8 @@ impl Parser {
         Ok(Expr::Name(w.to_string()))
     }
 
+    /// An array constant after its `{`: rows of literals, columns split by the locale's array column
+    /// separator and rows by `;`.
     fn array(&mut self) -> Result<Expr, ParseError> {
         let mut rows = vec![Vec::new()];
         loop {
