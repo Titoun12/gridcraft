@@ -1,8 +1,22 @@
 # Formula language
 
 View → Interface language is the existing, persisted language preference. Choose **Español**
-for Spanish formula entry and display. On first run the preference follows the system language.
-English and the other interface languages currently use the English formula table and separators.
+for Spanish formula entry and display, or **Français** for French. On first run the preference
+follows the system language. English and the other interface languages currently use the English
+formula table and separators.
+
+French covers every registered function and evaluator special form, names Excel leaves unchanged
+included (`crates/formula/src/input/french.rs`; `engine/tests/french_formula_names.rs` fails when
+a new function has no French row). Names were checked against the first name of the Syntax
+section of Microsoft's French function pages: the French alphabetical list is machine-translated
+in places (`ALIMENTATION` for POWER) and is not a source. For example,
+`=SI(VRAI;SOMME(1,5;2,25);0)` evaluates to 3.75, and `=MAX.SI.ENS(…)`, `=RECHERCHEX(…)` and
+`=AUJOURDHUI()` are French Excel's spellings. French uses the same separators as Spanish below;
+the backslash between array columns is not confirmed against French Excel. An English name typed
+in French still works, unless French gives it to another function (`TRIM` is French for MIRR).
+Error values are written the French way in formulas (`#NOM?`, `#VALEUR!`, `#NOMBRE!`, `#NUL!`,
+`#PROPAGATION!`, `#CHARGEMENT_DONNEES`, as French Excel's `TYPE.ERREUR` help lists them); English
+spellings are still read.
 
 | Spanish | Canonical English |
 | --- | --- |
